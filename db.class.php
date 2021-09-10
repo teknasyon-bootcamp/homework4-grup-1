@@ -35,7 +35,7 @@ class DB
     }
 
 
-    public static function find(int $id) : static
+    public static function find(int $id) : static | null
     {
         self::connect();
 
@@ -46,8 +46,11 @@ class DB
 
         $namedQuery->execute();
 
+        $result = $namedQuery->fetchObject(static::class);
 
-        return $namedQuery->fetchObject(static::class);
+        $result = $result ?: null;
+
+        return $result;
     }
 
 
