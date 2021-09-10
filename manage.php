@@ -5,7 +5,57 @@ require_once "post.class.php";
 // Get all posts 
 $posts = Post::All();
 
+// Defines default variable
+$action = '';
+$content = '';
+$postId = '';
+$title = '';
+
+if(isset($_GET['action'])){
+    $action = $_GET['action'];
+}
+
+if(isset($_REQUEST['post'])){
+    $postId = $_REQUEST['post'];
+}
+
+if(isset($_POST['content'])){
+    $content = $_POST['content'];
+}
+
+if(isset($_POST['title'])){
+    $title = $_POST['title'];
+}
+
+switch ($action) {
+    case 'edit' :   
+        $post = Post::find($postId);
+        $post->title = $title;
+        $post->content = $content;
+        $post->update();
+
+        header("Refresh:0; url=manage.php");
+        break;
+    case 'create':
+        $post = new Post;
+        $post->title = $title;
+        $post->content = $content;
+
+        $post->create();
+
+        header("Refresh:0; url=manage.php");
+        break;
+    case 'delete':
+        $post = Post::find($postId);
+
+        $post->delete();
+
+        header("Refresh:0; url=manage.php");
+        break;
+}
+
 ?>
+
 <!DOCTYPE html>
 <html lang="tr">
  
@@ -51,23 +101,21 @@ $posts = Post::All();
             </thead>
             <tbody>
                 <!-- List created posts -->
-                <?php foreach($posts as $post) { ?>
+                <?php foreach($posts as $post) :  ?>
                 <tr>
                     <td><?=$post->title?></td>
                     <td><?=$post->content?></td>
-                    <td><button class="btn btn-warning" type="button" data-toggle="modal" data-target="#update_<?=$post->id?>"><span class="glyphicon glyphicon-edit"></span> Update</button> <a href="?id=<?=$post->id?>" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span> Delete</a></td>
+                    <td><button class="btn btn-warning" type="button" data-toggle="modal" data-target="#update_<?=$post->id?>"><span class="glyphicon glyphicon-edit"></span> Update</button> <a href="?action=delete&post=<?=$post->id?>" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span> Delete</a></td>
                 </tr>
-                <?php } ?>
+                <?php endforeach ?>
             </tbody>
         </table>
     </div>
- 
-    <?php //$posts=Post::All(); //kayıt çekme işlemini tekrarlıyoruz ?>
-    <?php foreach($posts as $post) { ?>
-    <div class="modal fade" id="update_<?=$post->id?>">
+    <?php foreach($posts as $post) : ?>
+    <div class="modal fade" id="update_<?= $post->id ?>">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form action="manage.php/?action=edit&post=<?=$post->id?>" method="POST">
+                <form action="manage.php?action=edit&post=<?= $post->id ?>" method="POST">
                     <div class="modal-header">
                         <h3 class="modal-title">Update</h3>
                     </div>
@@ -78,18 +126,18 @@ $posts = Post::All();
                                 <label>Title</label>
                                 <input type="text" 
                                        class="form-control" 
-                                       value="<?=$post->title?>" 
+                                       value="<?= $post->title ?>" 
                                        name="title" />
                                 <input type="hidden" 
                                        class="form-control" 
-                                       value="<?=$post->id?>" 
+                                       value="<?= $post->id ?>" 
                                        name="id" />
                             </div>
                             <div class="form-group">
                                 <label>Content</label>
                                 <input type="text" 
                                        class="form-control" 
-                                       value="<?=$post->content?>" 
+                                       value="<?= $post->content ?>" 
                                        name="content" />
                             </div>
                         </div>
@@ -103,13 +151,13 @@ $posts = Post::All();
             </div>
         </div>
     </div>
-    <?php } ?>
+    <?php endforeach ?>
  
     <!-- Add Modal -->
     <div class="modal fade" id="form_modal" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form method="POST" action="manage.php/?action=create">
+                <form method="POST" action="manage.php?action=create">
                     <div class="modal-header">
                         <h3 class="modal-title">Add</h3>
                     </div>
@@ -123,7 +171,6 @@ $posts = Post::All();
                             <div class="form-group">
                                 <label>Content</label>
                                 <input type="text" class="form-control" name="content" />
-                                <input type="hidden" class="form-control" name="id" />
                             </div>
                         </div>
                     </div>
@@ -138,3 +185,4 @@ $posts = Post::All();
     </div>
 </body>
 </html>
+
