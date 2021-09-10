@@ -35,7 +35,7 @@ class DB
     }
 
 
-    public static function find(int $id)
+    public static function find(int $id) : static
     {
         self::connect();
 
@@ -84,8 +84,6 @@ class DB
         $namedQuery = self::$pdo->prepare("INSERT INTO posts(" . self::$tableColumns . ") VALUES(" . self::$tableValueParams . ")");
 
         foreach ($properties as $param => $value) {
-            echo ":$param <br>";
-            echo $value . "<br>";
             $namedQuery->bindValue(":$param", $value);
         }
 
