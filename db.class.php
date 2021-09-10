@@ -9,6 +9,7 @@ class DB
     private static $tableColumns = "";
     private static $tableValueParams = "";
     private static $tableSetParams = "";
+    private static $tableName = "";
 
     public function __construct()
     {
@@ -17,11 +18,17 @@ class DB
 
     public static function connect()
     {
-
         try {
             self::$pdo = new PDO('mysql:host=mariadb;dbname=blog', 'root', 'root');
         } catch (\PDOException $ex) {
             exit("Veritabanına bağlanırken bir hata ile karşılaşıldı. {$ex->getMessage()}");
+        }
+
+        
+        if (static::$tableName) {
+            self::$tableName  = static::$tableName ;    
+        } else {
+            self::$tableName  = strtolower(static::class).'s';   
         }
     }
 
@@ -29,7 +36,7 @@ class DB
     public static function All()
     {
         self::connect();
-        $query = self::$pdo->query('Select * from posts');
+        $query = self::$pdo->query("Select * from ".self::$tableName."");
 
         return $query->fetchAll(PDO::FETCH_CLASS, static::class);
     }
@@ -39,7 +46,7 @@ class DB
     {
         self::connect();
 
-        $query = "SELECT * FROM posts WHERE id=:id";
+        $query = "SELECT * FROM ".self::$tableName." WHERE id=:id";
         $namedQuery = self::$pdo->prepare($query);
 
         $namedQuery->bindValue(':id', $id);
@@ -84,7 +91,7 @@ class DB
 
         $properties = $this->serialize();
 
-        $namedQuery = self::$pdo->prepare("INSERT INTO posts(" . self::$tableColumns . ") VALUES(" . self::$tableValueParams . ")");
+        $namedQuery = self::$pdo->prepare("INSERT INTO ".self::$tableName."(" . self::$tableColumns . ") VALUES(" . self::$tableValueParams . ")");
 
         foreach ($properties as $param => $value) {
             $namedQuery->bindValue(":$param", $value);
@@ -98,7 +105,7 @@ class DB
         self::connect();
         $properties = $this->serialize();
 
-        $query = "UPDATE posts SET " . self::$tableSetParams . " WHERE id=:id";
+        $query = "UPDATE ".self::$tableName." SET " . self::$tableSetParams . " WHERE id=:id";
         $namedQuery = self::$pdo->prepare($query);
 
         foreach ($properties as $param => $value) {
@@ -112,7 +119,7 @@ class DB
     {
         self::connect();
 
-        $query = "DELETE FROM posts WHERE id=:id";
+        $query = "DELETE FROM ".self::$tableName." WHERE id=:id";
         $namedQuery = self::$pdo->prepare($query);
 
         $namedQuery->bindValue(":id", $this->id);
