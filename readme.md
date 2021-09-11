@@ -41,7 +41,7 @@ class User extends DB
 ---
 ## Emeği Geçen Babacanlar 
 
-| Adı | Github Kullancısı |
+| Adı | Github Kullanıcı Adı |
 | ----------- | ----------- |
 | Esra ULUTÜRK | [@esrauluturk](https://github.com/esrauluturk) |
 | Haydar ŞAHİN | [@haydar](https://github.com/haydar/) |
