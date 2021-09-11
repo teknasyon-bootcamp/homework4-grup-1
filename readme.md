@@ -19,7 +19,7 @@ Hadi bir örnek daha yapalım. Tüm kullanıcıları çekelim.
 $users = User::All();
 ```
 
-Kod eklenecek her modelde ORM'in çalışabilmesi için sadece iki şeye ihtiyacımız var. DB sınıfından kalıtım alması ve tüm propertylerinin koda eklenmiş olması.
+Koda eklenecek her modelde ORM'in çalışabilmesi için sadece iki şeye ihtiyacımız var. DB sınıfından kalıtım alması ve tüm propertylerinin koda eklenmiş olması.
 
 ```php 
 <?php
