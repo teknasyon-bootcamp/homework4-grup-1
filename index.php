@@ -27,7 +27,9 @@ $posts = Post::All();
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-
+    <style>
+    #more {display: none;}
+    </style>
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
@@ -75,11 +77,16 @@ $posts = Post::All();
                 } else {
                     // Show all posts if there isn't any specific get request
                     foreach ($posts as $post) {
+                        $contentFirstPart = substr($post->content, 0, 100);
+                        $contentSecondPart = substr($post->content, 100, strlen($post->content));
                         echo "<tr>";
                         echo '<td>';
                         echo '<a class="navbar-brand" href=index.php?post=' . $post->id . '>' . $post->title . "</a>";
                         echo '</td>';
-                        echo '<td>' . $post->content . '</td>';
+                        echo '<td>';
+                        echo "<p>$contentFirstPart<span id='dots'>...</span><span id='more'>$contentSecondPart</span></p>
+                        <a href='#' onclick='myFunction()' id='myBtn'>Read more</a>";
+                        echo '</td>';
                         echo "</tr>";
                     }
                 }
@@ -87,4 +94,21 @@ $posts = Post::All();
             </tbody>
         </table>
     </div>
+    <script>
+function myFunction() {
+  var dots = document.getElementById("dots");
+  var moreText = document.getElementById("more");
+  var btnText = document.getElementById("myBtn");
+
+  if (dots.style.display === "none") {
+    dots.style.display = "inline";
+    btnText.innerHTML = "Read more"; 
+    moreText.style.display = "none";
+  } else {
+    dots.style.display = "none";
+    btnText.innerHTML = "Read less"; 
+    moreText.style.display = "inline";
+  }
+}
+</script>
 </body>

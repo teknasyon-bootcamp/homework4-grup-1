@@ -69,6 +69,9 @@ switch ($action) {
  
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <style>
+    #more {display: none;}
+    </style>
  
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
@@ -98,10 +101,17 @@ switch ($action) {
             </thead>
             <tbody>
                 <!-- List created posts -->
-                <?php foreach($posts as $post) :  ?>
+                    <?php foreach($posts as $post) : ?>
+                    <?php $contentFirstPart = substr($post->content, 0, 100);
+                    $contentSecondPart = substr($post->content, 100, strlen($post->content));
+                     ?>
                 <tr>
-                    <td><?=$post->title?></td>
-                    <td><?=$post->content?></td>
+                    <td><?=$post->title?></td> <td>
+                        
+                        <p><?=$contentFirstPart?><span id="dots">...</span><span id="more"><?=$contentSecondPart?></span></p>
+                        <a href="#" onclick="myFunction()" id="myBtn">Read more</a>
+                    
+                    </td>
                     <!-- Creates update and delete buttons which are having given values on the right side of the page-->
                     <td><button class="btn btn-warning" type="button" data-toggle="modal" data-target="#update_<?=$post->id?>"><span class="glyphicon glyphicon-edit"></span>Update</button>
                     <a href="?action=delete&post=<?=$post->id?>" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span>Delete</a></td>
@@ -186,6 +196,23 @@ switch ($action) {
             </div>
         </div>
     </div>
+    <script>
+function myFunction() {
+  var dots = document.getElementById("dots");
+  var moreText = document.getElementById("more");
+  var btnText = document.getElementById("myBtn");
+
+  if (dots.style.display === "none") {
+    dots.style.display = "inline";
+    btnText.innerHTML = "Read more"; 
+    moreText.style.display = "none";
+  } else {
+    dots.style.display = "none";
+    btnText.innerHTML = "Read less"; 
+    moreText.style.display = "inline";
+  }
+}
+</script>
 </body>
 </html>
 
