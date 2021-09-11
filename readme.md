@@ -1,3 +1,55 @@
+# :tada: Birinci Grup Gururla Sunar :tada:
+
+Bu projemizde basit bir DB sınıfı yazıp ardından ailemize ve arkadaşlarımı daha fazla zaman ayırabilirdik ancak yapmadık. 
+
+Bunun yerine proje isterlerini aşıp basit bir ORM (Object Relational Mapping - Nesne İlişkisel Eşleme ) yapısı kurduk. 
+
+Peki bunu neden yaptık? Çünkü neden yapmayalım...
+:technologist:
+
+Peki ne demek bu? Koda eklediğim her modelin en basit CRUD işlemlerine bile sıfırdan katı SQL sorguları yazmak yerine sırtımı nesne tabanlı programlamaya dayıyorum demek. Örneğin bir model üzerinde bunun örneğini gösterelim. Modelimizin adı User olsun. 1 numaralı id ye sahip olan User'ı çekmek için sadece şunu yazmamız yetecektir. 
+
+```php 
+$user = User::find(1);
+```
+
+Hadi bir örnek daha yapalım. Tüm kullanıcıları çekelim. 
+
+```php 
+$users = User::All();
+```
+
+Kod eklenecek her modelde ORM'in çalışabilmesi için sadece iki şeye ihtiyacımız var. DB sınıfından kalıtım alması ve tüm propertylerinin koda eklenmiş olması.
+
+```php 
+<?php
+
+
+require_once 'db.class.php';
+
+
+class User extends DB
+{
+    public int $id;
+    public string $firstname = '';
+    public string $surname = '';
+}
+
+```
+
+
+---
+## Emeği Geçen Babacanlar 
+
+| Adı | Github Kullancısı |
+| ----------- | ----------- |
+| Esra ULUTÜRK | [@esrauluturk](https://github.com/esrauluturk) |
+| Haydar ŞAHİN | [@haydar](https://github.com/haydar/) |
+| Gökhan GEMİCİ | [@gokhangemici](https://github.com/gokhangemici) |
+| Enes Fırat DOĞAN | [@enesfirat](https://github.com/enesfirat) |
+
+---
+
 # Ödev 4: MySQL - Yazı Listesi
 
 ## index.php
