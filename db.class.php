@@ -4,25 +4,19 @@ require_once "post.class.php";
 
 class DB
 {
-
-    public static PDO $pdo;
     private static $tableColumns = "";
     private static $tableValueParams = "";
     private static $tableSetParams = "";
     private static $tableName = "";
 
-    public function __construct()
-    {
-        $this::connect();
-    }
 
-    // // Connect the database and set tableName
+    // Connect the database and set tableName
     public static function connect()
     {
 
         // Create the pdo object 
         try {
-            self::$pdo = new PDO('mysql:host=mariadb;dbname=blog', 'root', 'root');
+            $pdo = new PDO('mysql:host=mariadb;dbname=blog', 'root', 'root');
         } catch (\PDOException $ex) {
             exit("Veritabanına bağlanırken bir hata ile karşılaşıldı. {$ex->getMessage()}");
         }
@@ -35,6 +29,8 @@ class DB
             // That means that there isn't customization. It will be apply  default table naming 
             self::$tableName  = strtolower(static::class) . 's';
         }
+
+        return $pdo;
     }
 
 
@@ -48,8 +44,7 @@ class DB
      * */
     public static function All()
     {
-        self::connect();
-        $query = self::$pdo->query("Select * from " . self::$tableName . "");
+        $query = self::connect()->query("Select * from " . self::$tableName . "");
 
         return $query->fetchAll(PDO::FETCH_CLASS, static::class);
     }
@@ -66,13 +61,10 @@ class DB
      */
     public static function find(int $id): static | null
     {
-        // Connect the database
-        self::connect();
-
         $query = "SELECT * FROM " . self::$tableName . " WHERE id=:id";
 
         //Prepare query and bind variables
-        $namedQuery = self::$pdo->prepare($query);
+        $namedQuery = self::connect()->prepare($query);
 
         $namedQuery->bindValue(':id', $id);
 
@@ -124,13 +116,10 @@ class DB
     // Create the record
     public function create()
     {
-        // Connect the database
-        self::connect();
-
         // Serialize parts of the query
         $properties = $this->serialize();
 
-        $namedQuery = self::$pdo->prepare("INSERT INTO " . self::$tableName . "(" . self::$tableColumns . ") VALUES(" . self::$tableValueParams . ")");
+        $namedQuery = self::connect()->prepare("INSERT INTO " . self::$tableName . "(" . self::$tableColumns . ") VALUES(" . self::$tableValueParams . ")");
 
         // Bind params
         foreach ($properties as $param => $value) {
@@ -142,14 +131,11 @@ class DB
 
     public function update()
     {
-        // Connect the database
-        self::connect();
-
         // Serialize parts of the query
         $properties = $this->serialize();
 
         $query = "UPDATE " . self::$tableName . " SET " . self::$tableSetParams . " WHERE id=:id";
-        $namedQuery = self::$pdo->prepare($query);
+        $namedQuery = self::connect()->prepare($query);
 
         // Bind params
         foreach ($properties as $param => $value) {
@@ -165,7 +151,7 @@ class DB
         self::connect();
 
         $query = "DELETE FROM " . self::$tableName . " WHERE id=:id";
-        $namedQuery = self::$pdo->prepare($query);
+        $namedQuery = self::connect()->prepare($query);
 
         // Bind id param
         $namedQuery->bindValue(":id", $this->id);
