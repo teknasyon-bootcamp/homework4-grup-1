@@ -1,59 +1,56 @@
 <?php
 
+//imports this file to leverage its functionalities and attributes
 require_once "post.class.php";
 
-// Get all posts 
+// Get all posts in my list 
 $posts = Post::All();
 
-// Defines default variable
+// Defines necessary variables for my post list and sets its default values
 $action = '';
-$content = '';
 $postId = '';
 $title = '';
-
-if(isset($_GET['action'])){
-    $action = $_GET['action'];
+$content = '';
+//get the value of action variable which was given in the url
+if(isset($_GET['action'])){ //isset function checks whether a variable is declared and is different than null. 
+    $action = $_GET['action']; 
 }
-
 if(isset($_REQUEST['post'])){
-    $postId = $_REQUEST['post'];
+    $postId = $_REQUEST['post']; 
 }
-
-if(isset($_POST['content'])){
-    $content = $_POST['content'];
-}
-
 if(isset($_POST['title'])){
     $title = $_POST['title'];
 }
-
+if(isset($_POST['content'])){
+    $content = $_POST['content']; 
+}
+/**
+ * Performs create new post, update and delete existing post 
+ * using the value of action variable in the url    
+ */
 switch ($action) {
     case 'edit' :   
         $post = Post::find($postId);
         $post->title = $title;
         $post->content = $content;
         $post->update();
-
-        header("Refresh:0; url=manage.php");
+        
+        // Sends a raw http header to the browser in a raw form
+        header("Refresh:0; url=manage.php");  
         break;
     case 'create':
         $post = new Post;
         $post->title = $title;
         $post->content = $content;
-
         $post->create();
-
         header("Refresh:0; url=manage.php");
         break;
     case 'delete':
         $post = Post::find($postId);
-
         $post->delete();
-
         header("Refresh:0; url=manage.php");
         break;
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -81,12 +78,12 @@ switch ($action) {
 <body>
     <nav class="navbar navbar-default">
         <div class="container-fluid">
-            <a class="navbar-brand" href="manage.php">Welcome</a>
+            <a class="navbar-brand" style="color:blue; width:120%; height:50px; background-color:#b0e0e6; right: 0px;"  href="manage.php">Welcome</a>
         </div>
     </nav>
     <div class="col-md-3"></div>
-    <div class="col-md-6 well">
-        <h3 class="text-primary">POSTS </h3>
+    <div class="col-md-12 well well-sm"> 
+        <h3 class="text-primary">POSTS</h3>
         <hr style="border-top:1px dotted #ccc;" />
         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#form_modal"><span class="glyphicon glyphicon-plus"></span> Add</button>
         
@@ -105,7 +102,9 @@ switch ($action) {
                 <tr>
                     <td><?=$post->title?></td>
                     <td><?=$post->content?></td>
-                    <td><button class="btn btn-warning" type="button" data-toggle="modal" data-target="#update_<?=$post->id?>"><span class="glyphicon glyphicon-edit"></span> Update</button> <a href="?action=delete&post=<?=$post->id?>" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span> Delete</a></td>
+                    <!-- Creates update and delete buttons which are having given values on the right side of the page-->
+                    <td><button class="btn btn-warning" type="button" data-toggle="modal" data-target="#update_<?=$post->id?>"><span class="glyphicon glyphicon-edit"></span>Update</button>
+                    <a href="?action=delete&post=<?=$post->id?>" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span>Delete</a></td>
                 </tr>
                 <?php endforeach ?>
             </tbody>
@@ -127,18 +126,20 @@ switch ($action) {
                                 <input type="text" 
                                        class="form-control" 
                                        value="<?= $post->title ?>" 
-                                       name="title" />
-                                <input type="hidden" 
+                                       name="title"/>
+                                      
+<!-- A hidden field let us include data that cannot be seen or modified 
+    when the form is submitted. 
+-->
+                             <input type="hidden" 
                                        class="form-control" 
                                        value="<?= $post->id ?>" 
                                        name="id" />
                             </div>
                             <div class="form-group">
                                 <label>Content</label>
-                                <input type="text" 
-                                       class="form-control" 
-                                       value="<?= $post->content ?>" 
-                                       name="content" />
+                                <textarea rows="5" cols= "20" type="text" class="form-control" name="content"><?=$post->content?></textarea>                         
+                                
                             </div>
                         </div>
                     </div>
@@ -157,7 +158,7 @@ switch ($action) {
     <div class="modal fade" id="form_modal" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form method="POST" action="manage.php?action=create">
+                <form action="manage.php?action=create" method="POST">
                     <div class="modal-header">
                         <h3 class="modal-title">Add</h3>
                     </div>
@@ -166,11 +167,13 @@ switch ($action) {
                         <div class="col-md-8">
                             <div class="form-group">
                                 <label>Title</label>
-                                <input type="text" class="form-control" name="title" />
+                                <input type="text" class="form-control" name="title"/>
                             </div>
                             <div class="form-group">
                                 <label>Content</label>
-                                <input type="text" class="form-control" name="content" />
+                                <textarea type="text" class="form-control" name="content" rows="5" cols="20"> 
+                                
+                                </textarea><!--Converted from input to textarea control-->
                             </div>
                         </div>
                     </div>

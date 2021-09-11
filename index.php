@@ -1,9 +1,13 @@
 <?php
 
+/* 
+imports this file to use functions of Post class which inherits from DB class 
+which database operations were performed
+*/
 require_once "post.class.php";
 
 // Get all posts 
-$posts = Post::All();
+$posts = Post::All(); 
 
 ?>
 
@@ -32,12 +36,16 @@ $posts = Post::All();
 <body>
     <nav class="navbar navbar-default">
         <div class="container-fluid">
-            <a class="navbar-brand" href="index.php">Welcome</a>
+            <a class="navbar-brand" href="index.php">
+            <div class="container-fluid pt-3"> <!-- .pt-3 means "add a top padding of 16px":-->
+                <p class="text-success">Welcome</p></a>
+            </div>  
         </div>
     </nav>
+    
     <div class="col-md-3"></div>
     <div class="col-md-6 well">
-        <h3 class="text-primary">POSTS </h3>
+        <h3 class="text-primary">POSTS</h3>
         <hr style="border-top:1px dotted #ccc;" />
         <br /><br />
         <table class="table table-bordered">
@@ -49,19 +57,23 @@ $posts = Post::All();
             </thead>
             <tbody>
                 <!-- List created posts -->
-
-
                 <?php
+                //show related post if there is a given specific get request
                 if (isset($_GET["post"])) {
 
-                    $id = $_GET["post"];
-                    $post = Post::find($id);
+                    $id = $_GET["post"]; //set given value in the post to id variable
+                    /*
+                        actually find() was implemented in DB class as a static method
+                        but since Post class inherits all functions and attributes of DB class
+                        we wrote Post instead of DB to access find method
+                        this method returns the post having id that I passed as a parameter.
+                    */
+                    $post = Post::find($id); 
 
                     echo '<td>' . $post->title . '</td>';
                     echo '<td>' . $post->content . '</td>';
                 } else {
-
-                    // Show all post if there isn't specific get request
+                    // Show all posts if there isn't any specific get request
                     foreach ($posts as $post) {
                         echo "<tr>";
                         echo '<td>';
@@ -71,7 +83,6 @@ $posts = Post::All();
                         echo "</tr>";
                     }
                 }
-
                 ?>
             </tbody>
         </table>
