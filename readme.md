@@ -1,6 +1,6 @@
 # :tada: Birinci Grup Gururla Sunar :tada:
 
-Bu projemizde basit bir DB sınıfı yazıp ardından ailemize ve arkadaşlarımı daha fazla zaman ayırabilirdik ancak yapmadık. 
+Bu projemizde basit bir DB sınıfı yazıp ardından ailemize ve arkadaşlarımıza daha fazla zaman ayırabilirdik ancak yapmadık. 
 
 Bunun yerine proje isterlerini aşıp basit bir ORM (Object Relational Mapping - Nesne İlişkisel Eşleme ) yapısı kurduk. 
 
